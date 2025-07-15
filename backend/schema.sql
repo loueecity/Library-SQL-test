@@ -1,4 +1,3 @@
-DROP DATABASE IF EXISTS smart_library;
 CREATE DATABASE smart_library;
 USE smart_library;
 
