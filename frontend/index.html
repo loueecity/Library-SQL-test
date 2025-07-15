@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Library System</title>
+  <style>
+    body { font-family: Arial; margin: 2em; }
+    table, th, td { border: 1px solid black; border-collapse: collapse; padding: 8px; }
+  </style>
+</head>
+<body>
+  <h1>📚 Library Book List</h1>
+  <table id="bookTable">
+    <tr><th>Title</th><th>Author</th><th>Genre</th><th>Available</th></tr>
+  </table>
+
+  <script>
+    fetch("http://localhost:3000/books")
+      .then(res => res.json())
+      .then(data => {
+        const table = document.getElementById("bookTable");
+        data.forEach(book => {
+          const row = `<tr><td>${book.title}</td><td>${book.author}</td><td>${book.genre}</td><td>${book.copies_available}</td></tr>`;
+          table.innerHTML += row;
+        });
+      });
+  </script>
+</body>
+</html>
+<h2>Add a New Book</h2>
+<form id="bookForm">
+  <input type="text" placeholder="Title" id="title" required>
+  <input type="text" placeholder="Author" id="author">
+  <input type="text" placeholder="Genre" id="genre">
+  <input type="text" placeholder="ISBN" id="isbn">
+  <input type="number" placeholder="Total Copies" id="copies" required>
+  <button type="submit">Add Book</button>
+</form>
+
+<script>
+document.getElementById("bookForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  fetch("http://localhost:3000/books", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      title: document.getElementById("title").value,
+      author: document.getElementById("author").value,
+      genre: document.getElementById("genre").value,
+      isbn: document.getElementById("isbn").value,
+      copies_total: parseInt(document.getElementById("copies").value)
+    })
+  }).then(res => res.json()).then(data => {
+    alert(data.message);
+    location.reload(); // Refresh book list
+  });
+});
+</script>
